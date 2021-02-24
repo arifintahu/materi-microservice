@@ -83,8 +83,6 @@ brokerUser.createService({
         }
     }
     },
-    methods: {
-    },
   
     afterConnected() {
         
