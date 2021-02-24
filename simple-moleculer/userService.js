@@ -3,7 +3,7 @@ const DbService = require("moleculer-db");
 
 const brokerNode3 = new ServiceBroker({
     namespace: "dev",
-    nodeID: "node-3",
+    nodeID: "node-users",
     transporter: "NATS"
 });
 
@@ -23,8 +23,8 @@ brokerNode3.createService({
     actions: {
         listUsers: {
             async handler(ctx) {
-                return this.broker.call("users.find", {}).then((res)=>{
-                //    await this.brokel.call("logger.createLog",{});
+                return this.broker.call("users.find", {}).then( async (res)=>{
+                    await this.broker.call("loggers.createLog", { action: "Get user", date: new Date()});
                    console.log("Berhasil Get",res);
                    return res;
                 }).catch((err)=>{
@@ -34,8 +34,8 @@ brokerNode3.createService({
         },
         createUsers: {
             async handler(ctx) {
-                return this.broker.call("users.create", ctx.params).then((res) => {
-                    // await this.brokel.call("logger.createLog", {});
+                return this.broker.call("users.create", ctx.params).then(async (res) => {
+                    await this.broker.call("loggers.createLog", { action: "Create User", date: new Date()});
                     console.log("berhasil create",res);
                     return res;
                 }).catch((err) => {
@@ -45,19 +45,20 @@ brokerNode3.createService({
         },
         updateUsers: {
             async handler(ctx) {
-                return this.broker.call("users.update", ctx.params).then((res) => {
-                    // await this.brokel.call("logger.createLog", {});
+                return this.broker.call("users.update", ctx.params).then(async (res) => {
+                    await this.broker.call("loggers.createLog", { action: "Update User", date: new Date()});
                     console.log("berhasil Update",res);
                     return res;
                 }).catch((err) => {
                     console.log(err);
+                    return err;
                 });
             }
         }, 
         deleteUsers: {
             async handler(ctx) {
                 return this.broker.call("users.remove", ctx.params).then(async (res) => {
-                    // await this.brokel.call("logger.createLog", {});
+                    await this.broker.call("loggers.createLog", { action: "Delete User", date: new Date()});
                     console.log("berhasil Delete");
                     return res;
                 }).catch((err) => {
