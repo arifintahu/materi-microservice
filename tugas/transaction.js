@@ -39,7 +39,7 @@ transactionNode.createService({
     },
   },
   methods : {
-    add: function (data) {
+    add: async function (data) {
       const trans = {
         '_id' :data._id,
         'to'  :data.to,
@@ -49,6 +49,18 @@ transactionNode.createService({
       console.log(trans)
       if(!trans._id || !trans.to || !trans.value ){
         return { status: 'error', message: 'data invalid' };
+      }
+
+      if(trans.from){
+        const userSource = await this.broker.call("users.listUsers", {id:trans.from})
+        if(!userSource){
+          return { status: 'error', message: 'data pengirim tidak ditemukan' };
+        }
+      }
+
+      const userDestination = await this.broker.call("users.listUsers", {id:trans.to})
+      if(!userDestination){
+        return { status: 'error', message: 'data penerima tidak ditemukan' };
       }
 
       return this.broker
