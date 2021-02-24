@@ -21,7 +21,7 @@ brokerNode1.createService({
         path: "/api",
         aliases: {
           "GET users"(req, res) {
-            this.broker.call("users.listUsers", {}).then((response) => {
+            this.broker.call("users.listUsers", req.query).then((response) => {
               res.end(JSON.stringify(response));
             });
           },
