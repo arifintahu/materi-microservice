@@ -1,0 +1,20 @@
+{
+  "name": "assignment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "service4.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node service4.js",
+    "start:user": "node service2.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "moleculer": "^0.14.12",
+    "moleculer-db": "^0.8.12",
+    "moleculer-repl": "^0.6.4",
+    "moleculer-web": "^0.9.1",
+    "nats": "^1.4.12"
+  }
+}
