@@ -23,25 +23,22 @@ brokerNode.createService({
     },
 
     createTransaction: {
-      // belum berhasil
       async handler(ctx) {
-        if (ctx.params.from) {
-          const listUsers = this.broker.call("users.listUsers");
-          console.log(listUsers);
-          if (listUsers) {
-            for (let i = 0; i < listUsers.length; i++) {
-              if (ctx.params.from == listUsers[i]["_id"]) {
-                if (!ctx.params.to)
-                  return this.broker.call("transaction.create", ctx.params);
-                for (let i = 0; i < listUsers.length; i++) {
-                  if (ctx.params.to == listUsers[i]["_id"])
-                    return this.broker.call("transaction.create", ctx.params);
-                }
-              }
-            }
+        const listUsers = await this.broker.call("users.listUsers");
+        let from = false;
+        let to = false;
+        for (let i = 0; i < listUsers.length; i++) {
+          if (listUsers[i]["_id"] == ctx.params.from) {
+            from = true;
+          }
+          if (listUsers[i]["_id"] == ctx.params.to) {
+            to = true;
           }
         }
-        return;
+        if (from && to) {
+          return this.broker.call("transaction.create", ctx.params);
+        }
+        return "user id tidak ditemukan";
       },
     },
   },
