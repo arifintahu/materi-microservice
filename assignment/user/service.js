@@ -81,4 +81,5 @@ brokerNode2.createService({
 
 Promise.all([brokerNode1.start(), brokerNode2.start()]).then(() => {
   brokerNode1.repl();
+  brokerNode2.repl();
 });
