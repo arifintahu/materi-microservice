@@ -36,7 +36,7 @@ brokerNode1.createService({
             });
           },
           "DELETE users"(req, res) {
-            this.broker.call("users.deleteUser", {}).then((response) => {
+            this.broker.call("users.deleteUser", req.query).then((response) => {
               res.end(JSON.stringify(response));
             });
           },

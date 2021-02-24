@@ -59,11 +59,15 @@ brokerNode3.createService({
     },
     deleteUser: {
       async handler(ctx) {
-        const user = await this.adapter.findOne({ _id: 1 });
-        console.log(user);
+        if(isNaN(ctx.params.id)){
+          return "Param ID invalid";
+        }else{
+          userID = parseInt(ctx.params.id)
+        }
+        const user = await this.adapter.findOne({ _id: userID });
         if (user) {
           try {
-            await this.adapter.db.remove({ _id: 1 });
+            await this.adapter.db.remove({ _id: userID });
           } catch (error) {
             return error;
           }
