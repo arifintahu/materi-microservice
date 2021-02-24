@@ -24,6 +24,7 @@ brokerNode1.createService({
           "POST users": "users.createUsers",
           "PUT users": "users.updateUsers",
           "DELETE users": "users.deleteUsers",
+          "GET loggers": "loggers.listLog",
           "GET transaction": "transaction.listTransaction",
           "POST transaction": "transaction.createTransaction",
           "DELETE transaction": "transaction.deleteTransaction",
