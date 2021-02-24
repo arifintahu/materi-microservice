@@ -52,11 +52,18 @@ brokerNode1.createService({
             });
           },
           "GET log"(req, res){
-            this.broker.call("log.listLog", {})
+            this.broker.call("log.listLogs", {})
+            .then((response) => {
+              res.end(JSON.stringify(response));
+            });
+          },
+          "POST log"(req, res){
+            this.broker.call("log.createLogs", {})
             .then((response) => {
               res.end(JSON.stringify(response));
             });
           }
+
 
         }
       }
