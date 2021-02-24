@@ -54,12 +54,23 @@ brokerNode3.createService({
                     return err;
                 });
             }
-        }, 
+        },
         deleteUsers: {
             async handler(ctx) {
                 return this.broker.call("users.remove", ctx.params).then(async (res) => {
-                    await this.broker.call("loggers.createLog", { action: "Delete User", date: new Date()});
+                    await this.broker.call("loggers.createLog", { action: "Delete User", date: new Date() });
                     console.log("berhasil Delete");
+                    return res;
+                }).catch((err) => {
+                    return (err);
+                });
+            }
+        }, 
+        getUser: {
+            async handler(ctx) {
+                return this.broker.call("users.get", ctx.params).then(async (res) => {
+                    await this.broker.call("loggers.createLog", { action: "Get 1 User", date: new Date()});
+                    console.log("berhasil Get");
                     return res;
                 }).catch((err) => {
                     return (err);
