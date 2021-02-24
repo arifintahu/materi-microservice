@@ -30,8 +30,12 @@ brokerNode1.createService({
           //create log gaperlu dibuat karena sudah masuk langsung saat |-
           //--> saat ada action lain.
 
+
+          
           //Sesuai dengan kata mas dimas, pakai ctx aja udah cukup |--- 
           //---> gaperlu pakai req res
+
+
 
           // "GET users"(req, res){
           //   this.broker.call("users.listUsers", {})
