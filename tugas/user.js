@@ -42,7 +42,7 @@ brokerNode3.createService({
                   : 1;
                 return { status: true, data: userID };
               } catch (error) {
-                return { status: false, message: FAIL_GET_USER, err: error };
+                return { status: false, msg: FAIL_GET_USER, err: error };
               }
             } else if (ctx.params.type == "list") {
               try {
@@ -50,14 +50,14 @@ brokerNode3.createService({
                 users = await this.broker.call("users.find", {});
                 return { status: true, data: users };
               } catch (error) {
-                return { status: false, message: FAIL_GET_USER, err: error };
+                return { status: false, msg: FAIL_GET_USER, err: error };
               }
             }
           case typeof ctx.params.id !== "undefined":
             if (isNaN(ctx.params.id)) {
               return {
                 status: false,
-                message: FAIL_GET_USER,
+                msg: FAIL_GET_USER,
                 err: ERR_INVALID_ID_PARAM,
               };
             } else {
@@ -70,19 +70,19 @@ brokerNode3.createService({
               } else {
                 return {
                   status: false,
-                  message: FAIL_GET_USER,
+                  msg: FAIL_GET_USER,
                   err: ERR_USER_NOT_FOUND,
                 };
               }
             } catch (error) {
-              return { status: false, message: FAIL_GET_USER, err: error };
+              return { status: false, msg: FAIL_GET_USER, err: error };
             }
           default:
             try {
               users = await this.broker.call("users.find", {});
               return { status: true, data: users };
             } catch (error) {
-              return { status: false, message: FAIL_GET_USER, err: error };
+              return { status: false, msg: FAIL_GET_USER, err: error };
             }
         }
       },
