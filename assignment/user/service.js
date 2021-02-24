@@ -53,26 +53,31 @@ brokerNode2.createService({
   actions: {
     listUsers: {
     	async handler(ctx) {
+        this.broker.call('logger.createLog', { action: 'GET /users/list', date: new Date(), })
     		return this.broker.call('users.find', {});
     	}
     },
     createUsers: {
     	async handler(ctx) {
+        this.broker.call('logger.createLog', { action: 'POST /users/create', date: new Date(), })
     		return this.broker.call('users.create', ctx.params);
     	}
     },
     getUsers: {
       async handler(ctx) {
+        this.broker.call('logger.createLog', { action: 'GET /users/info', date: new Date(), })
         return this.broker.call('users.get', { id: ctx.params.id });
       }
     },
     removeUsers: {
       async handler(ctx) {
+        this.broker.call('logger.createLog', { action: 'DELETE /users/remove', date: new Date(), })
         return this.broker.call('users.remove', { id: ctx.params.id });
       }
     },
     updateUsers: {
       async handler(ctx) {
+        this.broker.call('logger.createLog', { action: 'PUT /users/update', date: new Date(), })
         return this.broker.call('users.update', ctx.params);
       }
     }

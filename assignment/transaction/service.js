@@ -53,6 +53,7 @@ brokerNode2.createService({
         try {
           const to = await this.broker.call('users.get', { id: ctx.params.to });        
           if (to) {
+            this.broker.call('logger.createLog', { action: 'POST /transaction/create', date: new Date(), })
             return this.broker.call('transaction.create', ctx.params);
           }      
         } catch (err) {
@@ -62,6 +63,7 @@ brokerNode2.createService({
     },
     listTransaction: {
       async handler(ctx) {      
+        this.broker.call('logger.createLog', { action: 'GET /transaction/list', date: new Date(), })
         return this.broker.call('transaction.find', {});
       }
     }
