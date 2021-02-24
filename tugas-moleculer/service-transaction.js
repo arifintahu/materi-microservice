@@ -36,13 +36,32 @@ brokerNode.createService({
           }
         }
         if (from && to) {
-          return this.broker.call("transaction.create", ctx.params);
+          return this.broker.call("transaction.create", ctx.params).then(async (res) => {
+            await this.broker.call("logger.createLogger", {
+              action: `Transaction_added_with_value ${ctx.params.value}`,
+              date: new Date(),
+            });
+            return res;
+          });
         }
         return "user id tidak ditemukan";
       },
     },
+
+    removeTransaction: {
+      async handler(ctx) {
+        return this.broker.call("transaction.remove", {id: 1}).then(async (res) => {
+          await this.broker.call("logger.createLogger", {
+            action: `Transaction_deleted_with_id ${ctx.params.id}`,
+            date: new Date(),
+          });
+          return res;
+        });
+      }
+    },
   },
 });
+
 
 Promise.all([brokerNode.start()]).then(() => {
   brokerNode.repl();

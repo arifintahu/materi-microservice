@@ -23,14 +23,14 @@ nodeUser.createService({
   actions: {
     listUsers: {
       async handler(ctx) {
-        return this.broker.call("users.find", {});
+        return this.broker.call("users.find");
       },
     },
     createUsers: {
       async handler(ctx) {
         return this.broker.call("users.create", ctx.params).then(async (res) => {
           await this.broker.call("logger.createLogger", {
-            action: `Create_User ${ctx.params.name}`,
+            action: `Create_user ${ctx.params.name}`,
             date: new Date(),
           });
           return res;
@@ -41,7 +41,7 @@ nodeUser.createService({
       async handler(ctx) {
         return this.broker.call("users.remove", {id: 1}).then(async (res) => {
           await this.broker.call("logger.createLogger", {
-            action: `Delete_User ${ctx.params._id}`,
+            action: `Delete_user_with_id ${ctx.params.id}`,
             date: new Date(),
           });
           return res;
@@ -51,7 +51,7 @@ nodeUser.createService({
   },
 });
 
+
 Promise.all([nodeUser.start()]).then(() => {
   nodeUser.repl();
 });
-
