@@ -4,13 +4,12 @@ const HTTPServer = require("moleculer-web");
 const brokerNode1 = new ServiceBroker({
   namespace: "dev",
   nodeID: "node-1",
-  transporter: "NATS"
+  transporter: "NATS",
 });
-
 
 brokerNode1.createService({
   name: "gateway",
-  mergeParams:false,
+  mergeParams: false,
   mixins: [HTTPServer],
 
   settings: {
@@ -88,9 +87,9 @@ brokerNode1.createService({
 
   actions: {
     home: {
-        async handler() {
-            return "My Home";
-        }
+      async handler() {
+        return "My Home";
+      },
     },
     welcome: {
         params: {
@@ -102,7 +101,6 @@ brokerNode1.createService({
     }
   }
 }); //batas api gateway
-
 
 // Start brokers
 Promise.all([brokerNode1.start()]).then(() => {
