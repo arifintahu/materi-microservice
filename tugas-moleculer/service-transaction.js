@@ -3,7 +3,7 @@ const DbService = require("moleculer-db");
 
 const brokerNode = new ServiceBroker({
   namespace: "dev",
-  node: "node-transaction",
+  nodeID: "node-transaction",
   transporter: "NATS",
 });
 
@@ -13,9 +13,6 @@ brokerNode.createService({
 
   settings: {
     fields: ["_id", "to", "from", "value"],
-    entityValidator: {
-      name: "string",
-    },
   },
 
   actions: {
@@ -26,9 +23,23 @@ brokerNode.createService({
     },
 
     createTransaction: {
+      // belum berhasil
       async handler(ctx) {
         if (ctx.params.from) {
-          return this.broker.call("transaction.create", ctx.params);
+          const listUsers = this.broker.call("users.listUsers");
+          console.log(listUsers);
+          if (listUsers) {
+            for (let i = 0; i < listUsers.length; i++) {
+              if (ctx.params.from == listUsers[i]["_id"]) {
+                if (!ctx.params.to)
+                  return this.broker.call("transaction.create", ctx.params);
+                for (let i = 0; i < listUsers.length; i++) {
+                  if (ctx.params.to == listUsers[i]["_id"])
+                    return this.broker.call("transaction.create", ctx.params);
+                }
+              }
+            }
+          }
         }
         return;
       },
