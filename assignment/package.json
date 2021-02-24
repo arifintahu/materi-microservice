@@ -4,7 +4,9 @@
   "description": "",
   "main": "service4.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node service4.js",
+    "start:user": "node service2.js"
   },
   "author": "",
   "license": "ISC",
