@@ -4,7 +4,7 @@ const DbService = require('moleculer-db');
 
 const brokerNode1 = new ServiceBroker({
   namespace: 'dev',
-  nodeID: 'node-1',
+  nodeID: 'node-3',
   transporter: 'NATS'
 });
 
@@ -30,7 +30,7 @@ brokerNode1.createService({
 
 const brokerNode2 = new ServiceBroker({
   namespace: 'dev',
-  nodeID: 'node-2',
+  nodeID: 'node-4',
   transporter: "NATS"
 });
 
@@ -50,11 +50,18 @@ brokerNode2.createService({
   actions: {
     createTransaction: {
       async handler(ctx) {
-        return this.broker.call('transaction.create', ctx.params);
+        try {
+          const to = await this.broker.call('users.get', { id: ctx.params.to });        
+          if (to) {
+            return this.broker.call('transaction.create', ctx.params);
+          }      
+        } catch (err) {
+          return 'transaction failed, id penerima salah !!';          
+        }
       }
     },
     listTransaction: {
-      async handler(ctx) {
+      async handler(ctx) {      
         return this.broker.call('transaction.find', {});
       }
     }
@@ -63,4 +70,5 @@ brokerNode2.createService({
 
 Promise.all([brokerNode1.start(), brokerNode2.start()]).then(() => {
   brokerNode1.repl();
+  brokerNode2.repl();
 });
