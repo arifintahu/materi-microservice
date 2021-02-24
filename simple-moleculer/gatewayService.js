@@ -23,6 +23,8 @@ brokerNode1.createService({
           "POST users": "users.createUsers",
           "PUT users": "users.updateUsers",
           "DELETE users": "users.deleteUsers",
+          "POST loggers": "loggers.createLog",
+          "GET loggers": "loggers.listLog"
         }
       }
     ]
