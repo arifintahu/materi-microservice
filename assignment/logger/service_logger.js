@@ -3,12 +3,12 @@ const DbService = require("moleculer-db");
 
 const brokerLogger = new ServiceBroker({
     namespace: "dev",
-    nodeID: "logger-gateway",
+    nodeID: "node-logger",
     transporter: "NATS",
   });
 
   brokerLogger.createService({
-    name: "loggers",
+    name: "logger",
     mixins: [DbService],
 
     settings: {
@@ -22,7 +22,7 @@ const brokerLogger = new ServiceBroker({
     actions: {
       listLog: {
         async handler(ctx){
-            return await this.broker.call("loggers.find",{}).then((res)=>{
+            return await this.broker.call("logger.find",{}).then((res)=>{
                 return res
             }).catch((err)=>{
                 console.log(err);
@@ -31,13 +31,16 @@ const brokerLogger = new ServiceBroker({
       },
         createLog: {
             async handler(ctx) {
-                return await this.broker.call("loggers.create", ctx.params).then((res) => {
+                return await this.broker.call("logger.create", ctx.params).then((res) => {
                     return res;
                 }).catch((err)=>{
                     console.log(err);
                 })
             }
         },
+    },
+    afterConnected(){
+
     }
 })
 
