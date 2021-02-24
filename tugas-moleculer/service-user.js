@@ -54,3 +54,4 @@ nodeUser.createService({
 Promise.all([nodeUser.start()]).then(() => {
   nodeUser.repl();
 });
+
