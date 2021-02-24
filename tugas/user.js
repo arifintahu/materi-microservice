@@ -46,8 +46,19 @@ brokerUser.createService({
       getByIdUser: {
           async handler(ctx) {
             try {
-                const response = await this.broker.call("users.get", ctx.params.id);
+                const response = await this.broker.call("users.get", ctx.params);
                 const log = await this.broker.call("logger.createLog", {action: "get by id user"});
+                return response;
+              } catch (err) {
+                  return err;
+              }
+          }
+      },
+			getByNameUser: {
+          async handler(ctx) {
+            try {
+                const response = await this.broker.call("users.find", {query: {name: ctx.params.name}});
+                const log = await this.broker.call("logger.createLog", {action: "get by name user"});
                 return response;
               } catch (err) {
                   return err;
@@ -58,6 +69,7 @@ brokerUser.createService({
         async handler(ctx) {
             try {
                 const response = await this.broker.call("users.remove", ctx.params.id);
+                const response = await this.broker.call("users.remove", ctx.params);
                 const log = await this.broker.call("logger.createLog", {action: "remove user"});
                 return response;
               } catch (err) {

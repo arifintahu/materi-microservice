@@ -1,3 +1,4 @@
 project-moleculer
 simple-moleculer/node_modules
-simple-moleculer/package-lock.json
+package-lock.json
+node_modules
