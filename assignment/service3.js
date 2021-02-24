@@ -20,12 +20,12 @@ brokerNode3.createService({
   },
 
   actions: {
-    addLogger: {
+    createLog: {
       async handler(ctx) {
         return this.broker.call('loggers.create', ctx.params);
       }
     },
-    listLoggers: {
+    listLogs: {
       async handler(ctx) {
         return this.broker.call('loggers.find', {});
       }
