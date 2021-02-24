@@ -20,11 +20,15 @@ brokerNode1.createService({
         path: "/api",
         aliases: {
           "GET users": "users.listUsers",
+          "GET user": "users.getUser",
           "POST users": "users.createUsers",
           "PUT users": "users.updateUsers",
           "DELETE users": "users.deleteUsers",
           "POST loggers": "loggers.createLog",
           "GET loggers": "loggers.listLog"
+          "GET transaction": "transaction.listTransaction",
+          "POST transaction": "transaction.createTransaction",
+          "DELETE transaction": "transaction.deleteTransaction",
         }
       }
     ]
