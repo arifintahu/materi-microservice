@@ -42,7 +42,13 @@ brokerNode1.createService({
               value: {type: "string"}
             },
     	async handler(ctx) {
-    		return this.broker.call("transaction.create", ctx.params);
+    		return this.broker.call("transaction.create", ctx.params).then((res) => {
+          this.broker.call("loggers.createLog", {
+            action: "add transaction",
+            date: new Date(),
+          });
+          return res;
+        });
     	}
     },
     deleteTransaction: {
@@ -51,7 +57,14 @@ brokerNode1.createService({
         },
 
     	async handler(ctx) {
-    		return this.broker.call("transaction.remove", { id: ctx.params.id });
+    		return this.broker.call("transaction.remove", { id: ctx.params.id }).then((res) => {
+          this.broker.call("loggers.createLog", {
+            action: "delete transaction",
+            date: new Date(),
+          });
+
+          return res;
+        })
     	}
     },
     updateTransaction: {
@@ -61,7 +74,14 @@ brokerNode1.createService({
               value: {type: "string", optional: true}
             },
     	async handler(ctx) {
-    		return this.broker.call("transaction.update", ctx.params);
+    		return this.broker.call("transaction.update", ctx.params).then((res) => {
+          this.broker.call("loggers.createLog", {
+            action: "update transaction from id "+ctx.params.id,
+            date: new Date(),
+          });
+
+          return res;
+        })
     	}
     },
   },
