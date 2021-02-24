@@ -68,7 +68,6 @@ brokerUser.createService({
       removeUser: {
         async handler(ctx) {
             try {
-                const response = await this.broker.call("users.remove", ctx.params.id);
                 const response = await this.broker.call("users.remove", ctx.params);
                 const log = await this.broker.call("logger.createLog", {action: "remove user"});
                 return response;
