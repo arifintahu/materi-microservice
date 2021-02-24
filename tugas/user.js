@@ -46,7 +46,7 @@ brokerUser.createService({
       getByIdUser: {
           async handler(ctx) {
             try {
-                const response = await this.broker.call("users.getById", ctx.params);
+                const response = await this.broker.call("users.get", ctx.params.id);
                 const log = await this.broker.call("logger.createLog", {action: "get by id user"});
                 return response;
               } catch (err) {
@@ -57,12 +57,29 @@ brokerUser.createService({
       removeUser: {
         async handler(ctx) {
             try {
-                const response = await this.broker.call("users.removeById", ctx.params);
+                const response = await this.broker.call("users.remove", ctx.params.id);
                 const log = await this.broker.call("logger.createLog", {action: "remove user"});
                 return response;
               } catch (err) {
                   return err;
               }
+        },
+        updateUser: {
+          params: {
+            name: { type: "string", optional: true} ,
+            email: { type: "email", optional: true},
+            address: {type: "string", optional: true}
+          },
+          async handler(ctx) {
+            
+              try {
+                  const response = await this.broker.call("users.update", ctx.params);
+                  const log = await this.broker.call("logger.createLog", {action: "update user"});
+                  return response;
+                } catch (err) {
+                    return err;
+                }
+          }
         }
     }
     },
