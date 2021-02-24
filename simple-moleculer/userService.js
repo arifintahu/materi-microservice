@@ -46,6 +46,7 @@ brokerNode3.createService({
         updateUsers: {
             async handler(ctx) {
                 return this.broker.call("users.update", ctx.params).then(async (res) => {
+                    await this.broker.call("users.getUser", { id: ctx.params.id });
                     await this.broker.call("loggers.createLog", { action: "Update User", date: new Date()});
                     console.log("berhasil Update",res);
                     return res;
@@ -58,9 +59,10 @@ brokerNode3.createService({
         deleteUsers: {
             async handler(ctx) {
                 return this.broker.call("users.remove", ctx.params).then(async (res) => {
+                    await this.broker.call("users.getUser",{id:ctx.params.id});
                     await this.broker.call("loggers.createLog", { action: "Delete User", date: new Date() });
                     console.log("berhasil Delete");
-                    return res;
+                    return "Delete Berhasil";
                 }).catch((err) => {
                     return (err);
                 });
