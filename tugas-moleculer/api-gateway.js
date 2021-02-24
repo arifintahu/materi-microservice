@@ -23,6 +23,7 @@ nodeApi.createService({
           "POST /": "gateway.welcome",
           "GET users": "users.listUsers",
           "POST users": "users.createUsers",
+          "DELETE users": "users.removeUsers",
           "GET transaction": "transaction.listTransaction",
           "POST transaction": "transaction.createTransaction",
           "GET logger": "logger.listLogger",
