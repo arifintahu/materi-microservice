@@ -18,7 +18,7 @@ nodeLogger.createService({
   actions: {
     listLogger: {
       async handler(ctx) {
-        return this.broker.call("logger.find", {});
+        return this.broker.call("logger.find");
       },
     },
     createLogger: {
