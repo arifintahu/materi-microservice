@@ -1,0 +1,29 @@
+{
+  "name": "moleculer-trial",
+  "version": "1.0.0",
+  "description": "Learn Moleculer for microservices",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Super-Bootcamp-2021-Fermium/moleculer-trial.git"
+  },
+  "keywords": [
+    "moleculer"
+  ],
+  "author": "Fermium",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Super-Bootcamp-2021-Fermium/moleculer-trial/issues"
+  },
+  "homepage": "https://github.com/Super-Bootcamp-2021-Fermium/moleculer-trial#readme",
+  "dependencies": {
+    "moleculer": "^0.14.12",
+    "moleculer-db": "^0.8.12",
+    "moleculer-repl": "^0.6.4",
+    "moleculer-web": "^0.9.1",
+    "nats": "^1.4.12"
+  }
+}
