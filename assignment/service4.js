@@ -27,7 +27,7 @@ brokerNode4.createService({
           "POST users": "users.addUser",
           "GET users": "users.listUsers",
           "DELETE users": "users.deleteUser",
-          "GET loggers": "loggers.listLoggers",
+          "GET loggers": "loggers.listLogs",
         },
       },
     ],

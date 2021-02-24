@@ -23,11 +23,13 @@ brokerNode2.createService({
   actions: {
     addUser: {
       async handler(ctx) {
-        return this.broker.call("users.create", ctx.params).then(() => {
-          //   this.broker.call("loggers.addLogger", {
-          //     action: "add user",
-          //     date: new Date(),
-          //   });
+        return this.broker.call("users.create", ctx.params).then((res) => {
+          this.broker.call("loggers.createLog", {
+            action: "add user",
+            date: new Date(),
+          });
+
+          return res;
         });
       },
     },
@@ -40,12 +42,13 @@ brokerNode2.createService({
 
     deleteUser: {
       async handler(ctx) {
-        console.log(ctx);
-        return this.broker.call("users.remove", ctx.params).then(() => {
-          //   this.broker.call("loggers.addLogger", {
-          //     action: "delete user",
-          //     date: new Date(),
-          //   });
+        return this.broker.call("users.remove", ctx.params).then((res) => {
+          this.broker.call("loggers.createLog", {
+            action: "delete user",
+            date: new Date(),
+          });
+
+          return res;
         });
       },
     },
