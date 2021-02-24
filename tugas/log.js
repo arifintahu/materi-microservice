@@ -1,6 +1,12 @@
 const { ServiceBroker } = require("moleculer");
 const DbService = require("moleculer-db");
 
+//LOGGING TERJADI SAAT ADA PERUBAHAN DI TRANSACTION MAUPUN USER
+//  this.broker.call("log.createLogs", {
+//   action: "the Action Name",
+//   date: new Date(),
+// });
+
 const brokerNode4 = new ServiceBroker({
   namespace: "dev",
   nodeID: "node-4",
@@ -12,37 +18,29 @@ brokerNode4.createService({
   mixins: [DbService],
 
   settings: {
-    fields: ["_id", "name", "date"],
+    fields: ["_id", "action", "date"],
       entityValidator: {
 				name: "string"
 			}
    },
 
   actions: {
+    createLogs: {
+    	async handler(ctx) {
+    		return this.broker.call("log.create", ctx.params);
+    	}
+    },
     listLogs: {
     	async handler(ctx) {
-    		return this.logList();
+        return this.broker.call("log.find");
     	}
     }
   },
-  methods: {
-    logList: () => {
-      return new Promise((resolve) => {
-        resolve([
-          { name: "Apples", price: 5 },
-          { name: "Oranges", price: 3 },
-          { name: "Bananas", price: 2 }
-        ]);
-      });
-    }
-  }
-  ,
-
   afterConnected() {
   	
   }
 });
 
-Promise.all([brokerNode3.start()]).then(() => {
-  brokerNode3.repl();
+Promise.all([brokerNode4.start()]).then(() => {
+  brokerNode4.repl();
 });
