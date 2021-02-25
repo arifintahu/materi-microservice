@@ -26,7 +26,6 @@ brokerNode2.createService({
         return this.broker.call("users.create", ctx.params).then((res) => {
           this.broker.call("loggers.createLog", {
             action: "add user",
-            date: new Date(),
           });
 
           return res;
@@ -40,12 +39,17 @@ brokerNode2.createService({
       },
     },
 
+    getUser: {
+      async handler(ctx) {
+        return this.broker.call("users.get", ctx.params);
+      }
+    },
+
     deleteUser: {
       async handler(ctx) {
         return this.broker.call("users.remove", ctx.params).then((res) => {
           this.broker.call("loggers.createLog", {
             action: "delete user",
-            date: new Date(),
           });
 
           return res;

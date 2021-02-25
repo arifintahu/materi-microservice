@@ -13,8 +13,13 @@
   "dependencies": {
     "moleculer": "^0.14.12",
     "moleculer-db": "^0.8.12",
+    "moleculer-db-adapter-sequelize": "^0.2.10",
     "moleculer-repl": "^0.6.4",
     "moleculer-web": "^0.9.1",
-    "nats": "^1.4.12"
+    "nats": "^1.4.12",
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "rc": "^1.2.8",
+    "sequelize": "^6.5.0"
   }
 }
