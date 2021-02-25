@@ -10,7 +10,7 @@ const FAIL_GET_USER = "FAILED to get user";
 
 const brokerNode3 = new ServiceBroker({
   namespace: "dev",
-  nodeID: "node-3",
+  nodeID: "node-2",
   transporter: "NATS",
 });
 
@@ -33,14 +33,14 @@ brokerNode3.createService({
     listUsers: {
       async handler(ctx) {
         switch (true) {
-          case typeof ctx.params.type !== "undefined":
-            if (ctx.params.type == "last") {
-              return this.getLast(ctx.params);
-            } else if (ctx.params.type == "list") {
-              return this.getList(ctx.params);
+          case typeof ctx.params.query.type !== "undefined":
+            if (ctx.params.query.type == "last") {
+              return this.getLast(ctx.params.query);
+            } else if (ctx.params.query.type == "list") {
+              return this.getList(ctx.params.query);
             }
-          case typeof ctx.params.id !== "undefined":
-            return this.getById(ctx.params);
+          case typeof ctx.params.query.id !== "undefined":
+            return this.getById(ctx.params.query);
           default:
             return this.getAll();
         }
@@ -48,17 +48,17 @@ brokerNode3.createService({
     },
     createUser: {
       async handler(ctx) {
-        return this.add(ctx.params);
+        return this.add(ctx.params.body);
       },
     },
     updateUser: {
       async handler(ctx) {
-        return this.update(ctx.params);
+        return this.update(ctx.params.body);
       },
     },
     deleteUser: {
       async handler(ctx) {
-        return this.delete(ctx.params);
+        return this.delete(ctx.params.query);
       },
     },
   },
@@ -138,8 +138,16 @@ brokerNode3.createService({
         try {
           user["_id"] = userID.data;
           this.broker.call("users.create", user);
+          await this.broker.call("log.createLogs", {
+            action: "success create user",
+            date: new Date(),
+          });
           return { status: true, msg: "User created successfully" };
         } catch (error) {
+          await this.broker.call("log.createLogs", {
+            action: "error create user",
+            date: new Date(),
+          });
           return { status: false, msg: FAIL_CREATE_USER, err: error };
         }
       } else {
@@ -154,9 +162,17 @@ brokerNode3.createService({
       user = await this.adapter.findOne({ _id: dataArg.id });
       if (user) {
         try {
-          this.broker.call("users.update", dataArg);
+          await this.broker.call("users.update", dataArg);
+          await this.broker.call("log.createLogs", {
+            action: "success update user",
+            date: new Date(),
+          });
           return { status: true, msg: "User was updated" };
         } catch (error) {
+          await this.broker.call("log.createLogs", {
+            action: "error update user",
+            date: new Date(),
+          });
           return { status: false, msg: FAIL_UPDATE_USER, err: error };
         }
       } else {
@@ -172,8 +188,16 @@ brokerNode3.createService({
       if (user.status) {
         try {
           await this.adapter.db.remove({ _id: userID });
+          await this.broker.call("log.createLogs", {
+            action: "success delete user",
+            date: new Date(),
+          });
           return { status: true, msg: "User was deleted" };
         } catch (error) {
+          await this.broker.call("log.createLogs", {
+            action: "error delete user",
+            date: new Date(),
+          });
           return { status: false, msg: FAIL_DELETE_USER, err: error };
         }
       } else {

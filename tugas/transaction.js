@@ -1,5 +1,12 @@
 const { ServiceBroker } = require('moleculer');
 const DbService = require('moleculer-db');
+const MESSAGE_ID_PARSE_ERROR = 'id parse error' ;
+const MESSAGE_DATA_INVALID =  'data invalid'  ;
+const MESSAGE_USER_SOURCE_NOT_FOUND = 'data pengirim tidak ditemukan';
+const MESSAGE_USER_DESTINATION_NOT_FOUND = 'data penerima tidak ditemukan';
+const MESSAGE_FAILED_CREATE_TRANSACTION = 'failed create transaction';
+const MESSAGE_ERROR_UPDATE_TRANSACTION =  'error update transaction';
+
 
 const transactionNode = new ServiceBroker({
   namespace: 'dev',
@@ -31,7 +38,7 @@ transactionNode.createService({
         const id = parseInt(ctx.params.query?.id,10);
         const data = ctx.params.body;
         if (!id) {
-          return { status: 'error', message: 'Id parse error' };
+          return { status: 'error', message: MESSAGE_ID_PARSE_ERROR};
         }
         
         return this.update(id,data)
@@ -46,29 +53,50 @@ transactionNode.createService({
         'from':data?.from,
         'value':data.value,
       }
-      console.log(trans)
       if(!trans._id || !trans.to || !trans.value ){
-        return { status: 'error', message: 'data invalid' };
+        await this.broker.call("log.createLogs", {
+          action: `ERROR : ${MESSAGE_DATA_INVALID}`,
+          date: new Date(),
+        });
+        return { status: 'error', message: MESSAGE_DATA_INVALID};
       }
 
       if(trans.from){
-        const userSource = await this.broker.call("users.listUsers", {id:trans.from})
-        if(!userSource){
-          return { status: 'error', message: 'data pengirim tidak ditemukan' };
+        const userSource = await this.broker.call("users.listUsers", {query : {id:trans.from}})
+        if(!userSource.status){
+          await this.broker.call("log.createLogs", {
+            action: `ERROR : ${MESSAGE_USER_SOURCE_NOT_FOUND}`,
+            date: new Date(),
+          });
+          return { status: 'error', message:  MESSAGE_USER_SOURCE_NOT_FOUND};
         }
       }
 
-      const userDestination = await this.broker.call("users.listUsers", {id:trans.to})
-      if(!userDestination){
-        return { status: 'error', message: 'data penerima tidak ditemukan' };
+      const userDestination = await this.broker.call("users.listUsers", {query : {id:trans.from}})
+      if(!userDestination.status){
+        await this.broker.call("log.createLogs", {
+          action: `ERROR : ${MESSAGE_USER_DESTINATION_NOT_FOUND}`,
+          date: new Date(),
+        });
+        return { status: 'error', message: MESSAGE_USER_DESTINATION_NOT_FOUND };
       }
 
       return this.broker
           .call('transaction.create',trans)
-          .then((trans) => {
+          .then(async (trans) => {
+            await this.broker.call("log.createLogs", {
+                action: "SUCCESS : create transaction",
+                date: new Date(),
+            });
             return trans;
           })
-          .catch();
+          .catch(async ()=>{
+            await this.broker.call("log.createLogs", {
+              action: `ERROR : ${ MESSAGE_FAILED_CREATE_TRANSACTION }`,
+              date: new Date(),
+            });
+            return { status: 'error', message:  MESSAGE_FAILED_CREATE_TRANSACTION};
+          });
     },
     list: function(){
       return this.broker
@@ -84,13 +112,25 @@ transactionNode.createService({
       if (trans) {
         return this.adapter.db
           .update({ _id: id }, { $set: data })
-          .then(() => {
+          .then(async () => {
+            await this.broker.call("log.createLogs", {
+                action: "SUCCESS :  update transaction",
+                date: new Date(),
+            });
             return { status: 'success', message: 'Success Update Data' };
           })
-          .catch(() => {
-            return { status: 'error', message: 'Error Update Data' };
+          .catch(async () => {
+            await this.broker.call("log.createLogs", {
+              action: `ERROR :  ${MESSAGE_ERROR_UPDATE_TRANSACTION}`,
+              date: new Date(),
+            });
+            return { status: 'error', message: MESSAGE_ERROR_UPDATE_TRANSACTION };
           });
       }
+      await this.broker.call("log.createLogs", {
+        action: "error update transaction, id not found",
+        date: new Date(),
+      });
       return { status: 'error', message: 'Id not found' };
         
     }

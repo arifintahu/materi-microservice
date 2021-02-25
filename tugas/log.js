@@ -19,9 +19,6 @@ brokerNode4.createService({
 
   settings: {
     fields: ["_id", "action", "date"],
-      entityValidator: {
-				name: "string"
-			}
    },
 
   actions: {
