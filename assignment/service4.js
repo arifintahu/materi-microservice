@@ -1,5 +1,6 @@
 const { ServiceBroker } = require("moleculer");
 const HTTPServer = require("moleculer-web");
+const { config } = require("./config");
 
 const brokerNode4 = new ServiceBroker({
   namespace: "dev",
@@ -12,7 +13,7 @@ brokerNode4.createService({
   mixins: [HTTPServer],
 
   settings: {
-    port: process.env.PORT || 3000,
+    port: config.server?.port,
     ip: "0.0.0.0",
     use: [],
     routes: [

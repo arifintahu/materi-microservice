@@ -1,5 +1,8 @@
 const { ServiceBroker } = require('moleculer');
 const DbService = require('moleculer-db');
+const SqlAdapter = require("moleculer-db-adapter-sequelize");
+const Sequelize = require("sequelize");
+const { config } = require('./config');
 
 const brokerNode3 = new ServiceBroker({
   namespace: 'dev',
@@ -11,13 +14,40 @@ brokerNode3.createService({
   name: 'loggers',
   mixins: [DbService],
 
-  settings: {
-    fields: ['_id', 'action', 'date'],
-    entityValidator: {
-      action: 'string',
-      date: 'string',
+  adapter: new SqlAdapter(
+    config.postgres?.database,
+    config.postgres?.username,
+    config.postgres?.password,
+    {
+      host: config.postgres?.host,
+      dialect: 'postgres'
+    }
+  ),
+  model: {
+    name: 'logger',
+    define: {
+      id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        primaryKey: true,
+      },
+      action: Sequelize.STRING,
+      date: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+      }
+    },
+    options: {
+      timestamps: false
     }
   },
+  // settings: {
+  //   fields: ['_id', 'action', 'date'],
+  //   entityValidator: {
+  //     action: 'string',
+  //     date: 'string',
+  //   }
+  // },
 
   actions: {
     createLog: {
