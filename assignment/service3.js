@@ -31,7 +31,10 @@ brokerNode3.createService({
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      action: Sequelize.STRING,
+      action: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       date: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
@@ -51,13 +54,16 @@ brokerNode3.createService({
 
   actions: {
     createLog: {
+      params: {
+        action: { type: 'string' }
+      },
       async handler(ctx) {
         return this.broker.call('loggers.create', ctx.params);
       }
     },
     listLogs: {
       async handler(ctx) {
-        return this.broker.call('loggers.find', {});
+        return this.broker.call('loggers.find', {sort: 'date', limit: 50});
       }
     }
   },
